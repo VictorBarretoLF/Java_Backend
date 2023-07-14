@@ -1,11 +1,14 @@
 package curso.api.rest.model;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Usuario implements Serializable {
@@ -21,6 +24,9 @@ public class Usuario implements Serializable {
 	private String senha;
 	
 	private String nome;
+	
+	@OneToMany(mappedBy="usuario", cascade = CascadeType.ALL)
+	private List<Telefone> telefones;
 
 	public Long getId() {
 		return id;
