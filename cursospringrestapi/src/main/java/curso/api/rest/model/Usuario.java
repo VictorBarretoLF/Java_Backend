@@ -28,6 +28,14 @@ public class Usuario implements Serializable {
 	@OneToMany(mappedBy="usuario", cascade = CascadeType.ALL)
 	private List<Telefone> telefones;
 
+	public List<Telefone> getTelefones() {
+		return telefones;
+	}
+
+	public void setTelefones(List<Telefone> telefones) {
+		this.telefones = telefones;
+	}
+
 	public Long getId() {
 		return id;
 	}
