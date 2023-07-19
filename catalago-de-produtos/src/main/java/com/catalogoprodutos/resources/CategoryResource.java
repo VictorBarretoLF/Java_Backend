@@ -22,7 +22,6 @@ public class CategoryResource {
 		list.add(new Category(2L, "Electro"));
 		
 		return ResponseEntity.ok().body(list);
-		
 	}
 
 }
