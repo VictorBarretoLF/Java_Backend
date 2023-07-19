@@ -1,24 +1,28 @@
 package com.catalogoprodutos.services;
 
 import java.util.List;
-
-
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.catalogoprodutos.dto.CategoryDTO;
 import com.catalogoprodutos.entities.Category;
 import com.catalogoprodutos.repositories.CategoryRepository;
 
 @Service
 public class CategoryService {
-	
+
 	@Autowired
 	private CategoryRepository categoryRepository;
 
 	@Transactional(readOnly = true)
-	public List<Category> findAll(){
-		return categoryRepository.findAll();
+	public List<CategoryDTO> findAll() {
+
+		List<CategoryDTO> list = categoryRepository.findAll().stream().map(x -> new CategoryDTO(x))
+				.collect(Collectors.toList());
+
+		return list;
 	}
 }
