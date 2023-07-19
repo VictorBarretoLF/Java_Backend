@@ -1,6 +1,7 @@
 package com.catalogoprodutos.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,16 @@ public class CategoryService {
 
 	@Transactional(readOnly = true)
 	public List<CategoryDTO> findAll() {
-
 		List<CategoryDTO> list = categoryRepository.findAll().stream().map(x -> new CategoryDTO(x))
 				.collect(Collectors.toList());
 
 		return list;
 	}
+	
+	public CategoryDTO findById(Long id) {
+		Optional<Category> obj = categoryRepository.findById(id);
+		Category entity = obj.get();
+		return new CategoryDTO(entity);
+	}
+
 }
