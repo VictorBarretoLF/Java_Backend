@@ -2,11 +2,12 @@ package com.catalogoprodutos.services;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,20 +24,18 @@ public class CategoryService {
 	private CategoryRepository categoryRepository;
 
 	@Transactional(readOnly = true)
-	public List<CategoryDTO> findAll() {
-		List<CategoryDTO> list = categoryRepository.findAll().stream().map(x -> new CategoryDTO(x))
-				.collect(Collectors.toList());
-
-		return list;
+	public Page<CategoryDTO> findAllPaged(PageRequest pageRequest) {
+		Page<Category> list = categoryRepository.findAll(pageRequest);
+		return list.map(category -> new CategoryDTO(category));
 	}
-	
+
 	@Transactional(readOnly = true)
 	public CategoryDTO findById(Long id) {
 		Optional<Category> obj = categoryRepository.findById(id);
 		Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada"));
 		return new CategoryDTO(entity);
 	}
-	
+
 	@Transactional
 	public CategoryDTO insert(CategoryDTO dto) {
 		Category entity = new Category();
@@ -50,18 +49,16 @@ public class CategoryService {
 		Optional<Category> obj = categoryRepository.findById(id);
 		Category entity = obj.orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada"));
 		entity.setName(categoryDTOUpdated.getName());
-		
+
 		return new CategoryDTO(entity);
 	}
 
 	public void delete(Long id) {
 		try {
 			categoryRepository.deleteById(id);
-		}
-		catch (EmptyResultDataAccessException e) {
+		} catch (EmptyResultDataAccessException e) {
 			throw new EntityNotFoundException("Id not found " + id);
-		}
-		catch (DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseException("Integrity violation");
 		}
 	}
