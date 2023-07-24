@@ -32,13 +32,13 @@ public class ProductService {
 	public ProductDTO findById(Long id) {
 		Optional<Product> obj = productRepository.findById(id);
 		Product entity = obj.orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada"));
-		return new ProductDTO(entity);
+		return new ProductDTO(entity, entity.getCategories());
 	}
 
 	@Transactional
 	public ProductDTO insert(ProductDTO dto) {
 		Product entity = new Product();
-		entity.setName(dto.getName());
+		// entity.setName(dto.getName());
 		entity = productRepository.save(entity);
 		return new ProductDTO(entity);
 	}
@@ -47,7 +47,7 @@ public class ProductService {
 	public ProductDTO update(Long id, ProductDTO productDTOUpdated) {
 		Optional<Product> obj = productRepository.findById(id);
 		Product entity = obj.orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada"));
-		entity.setName(productDTOUpdated.getName());
+		// entity.setName(productDTOUpdated.getName());
 
 		return new ProductDTO(entity);
 	}
