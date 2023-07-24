@@ -38,6 +38,10 @@ public class Product implements Serializable {
 	@ManyToMany
 	@JoinTable(name = "tb_product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 	Set<Category> categories = new HashSet<>();
+	
+	public Product() {
+
+	}
 
 	public Product(Long id, String name, String description, String imgUrl, Double price, Instant date) {
 		this.id = id;
