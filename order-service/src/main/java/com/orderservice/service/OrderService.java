@@ -1,5 +1,6 @@
 package com.orderservice.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -16,9 +17,12 @@ public class OrderService {
 		Order order = new Order();
 		order.setOrderNumber(UUID.randomUUID().toString());
 		
-		orderRequest.getOrderLineItemsDtoList()
+		List<OrderLineItems> orderLineItems = orderRequest.getOrderLineItemsDtoList()
 			.stream()
-			.map(orderLineItemsDto -> mapToDto(orderLineItemsDto));
+			.map(orderLineItemsDto -> mapToDto(orderLineItemsDto))
+			.toList();
+		
+		order.setOrderLineItemsList(orderLineItems);
 	}
 	
 	private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto) {
