@@ -9,9 +9,12 @@ import com.orderservice.dto.OrderLineItemsDto;
 import com.orderservice.dto.OrderRequest;
 import com.orderservice.model.Order;
 import com.orderservice.model.OrderLineItems;
+import com.orderservice.repository.OrderRepository;
 
 @Service
 public class OrderService {
+	
+	private OrderRepository orderRepository;
 	
 	public void placeOrder(OrderRequest orderRequest) {
 		Order order = new Order();
@@ -23,6 +26,8 @@ public class OrderService {
 			.toList();
 		
 		order.setOrderLineItemsList(orderLineItems);
+		
+		orderRepository.save(order);
 	}
 	
 	private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto) {
