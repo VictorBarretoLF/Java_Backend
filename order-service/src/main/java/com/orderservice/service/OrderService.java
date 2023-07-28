@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.orderservice.dto.OrderLineItemsDto;
 import com.orderservice.dto.OrderRequest;
@@ -19,6 +20,7 @@ public class OrderService {
 	
 	private final OrderRepository orderRepository;
 	
+	@Transactional
 	public void placeOrder(OrderRequest orderRequest) {
 		Order order = new Order();
 		order.setOrderNumber(UUID.randomUUID().toString());
