@@ -11,10 +11,13 @@ import com.orderservice.model.Order;
 import com.orderservice.model.OrderLineItems;
 import com.orderservice.repository.OrderRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 	
-	private OrderRepository orderRepository;
+	private final OrderRepository orderRepository;
 	
 	public void placeOrder(OrderRequest orderRequest) {
 		Order order = new Order();
