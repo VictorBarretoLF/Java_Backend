@@ -1,6 +1,5 @@
 version: "3.7"
 services:
-
   ## MySQL Docker Compose Config
   postgres-order:
     container_name: postgres-order
@@ -17,6 +16,20 @@ services:
     ports:
       - "5431:5431"
     command: -p 5431
+    restart: always
+
+  postgres-inventory:
+    container_name: postgres-inventory
+    image: postgres
+    environment:
+      POSTGRES_DB: inventory-service
+      POSTGRES_USER: ptechie
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - ./postgres-inventory:/data/postgres
+    ports:
+      - "5432:5432"
     restart: always
 
   ## Mongo Docker Compose Config
