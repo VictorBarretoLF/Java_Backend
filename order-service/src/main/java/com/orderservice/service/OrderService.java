@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.orderservice.dto.OrderLineItemsDto;
 import com.orderservice.dto.OrderRequest;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderService {
 	
 	private final OrderRepository orderRepository;
+	private final WebClient webClient;
 	
 	@Transactional
 	public void placeOrder(OrderRequest orderRequest) {
@@ -34,9 +36,15 @@ public class OrderService {
 		
 		// Call Inventory Service, and place order if product is in Stock
 		
+		Boolean result = webClient.get()
+			.uri("http://localhost:8080/inventory")
+			.retrieve()
+			.bodyToMono(Boolean.class)
+			.block();
 		
+		System.out.println(result);
 		
-		orderRepository.save(order);
+//		orderRepository.save(order);
 	}
 	
 	private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto) {
