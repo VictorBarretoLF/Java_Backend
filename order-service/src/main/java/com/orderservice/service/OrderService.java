@@ -34,17 +34,25 @@ public class OrderService {
 		
 		order.setOrderLineItemsList(orderLineItems);
 		
-		// Call Inventory Service, and place order if product is in Stock
+		List<String> skuCodes = order.getOrderLineItemsList()
+				.stream()
+				.map(orderLineItem -> orderLineItem.getSkuCode())
+				.toList();
 		
+		// Call Inventory Service, and place order if product is in Stock
+		// TODO: CONCETAR O ERRO AO DAR UM PARSE NO JSON, CONVERTER PARA O OBJETO CORRETO.
 		Boolean result = webClient.get()
-			.uri("http://localhost:8080/inventory")
+			.uri("http://localhost:8080/api/inventory?skuCode=iphone_12")
 			.retrieve()
 			.bodyToMono(Boolean.class)
 			.block();
 		
-		System.out.println(result);
-		
-//		orderRepository.save(order);
+		if(result) {
+			orderRepository.save(order);
+		} else {
+			throw new IllegalArgumentException("Product is not in stock, please try again latter");
+		}
+
 	}
 	
 	private OrderLineItems mapToDto(OrderLineItemsDto orderLineItemsDto) {
