@@ -1,5 +1,6 @@
 package com.orderservice.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.orderservice.dto.InventoryResponse;
 import com.orderservice.dto.OrderLineItemsDto;
 import com.orderservice.dto.OrderRequest;
 import com.orderservice.model.Order;
@@ -40,14 +42,17 @@ public class OrderService {
 				.toList();
 		
 		// Call Inventory Service, and place order if product is in Stock
-		// TODO: CONCETAR O ERRO AO DAR UM PARSE NO JSON, CONVERTER PARA O OBJETO CORRETO.
-		Boolean result = webClient.get()
-			.uri("http://localhost:8080/api/inventory?skuCode=iphone_12")
+		InventoryResponse[] inventoryResponseArray = webClient.get()
+			.uri("http://localhost:8080/api/inventory",
+                    uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
 			.retrieve()
-			.bodyToMono(Boolean.class)
+			.bodyToMono(InventoryResponse[].class)
 			.block();
 		
-		if(result) {
+		boolean allProductsInStock = inventoryResponseArray.length > 0 &&
+				Arrays.stream(inventoryResponseArray).allMatch(inventoryResponse -> inventoryResponse.isInStock());
+		
+		if(allProductsInStock) {
 			orderRepository.save(order);
 		} else {
 			throw new IllegalArgumentException("Product is not in stock, please try again latter");
